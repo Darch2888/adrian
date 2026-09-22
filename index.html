@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADRIAN — An Extraordinary Voyage | Odyssey Interstellar Cruises</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<!--
+  ══════════════════════════════════════════════════════════════════
+  ADRIAN — AN EXTRAORDINARY VOYAGE · slide deck (open in a browser)
+
+  NAVIGATION
+    → / Space ......... next slide          ← ............ previous
+    Home / End ........ first / last        F ............ fullscreen
+    P ................. show/hide the AI image prompt of the slide
+    C ................. copy the current image prompt
+
+  IMAGES — external PNG files (image.png, image1.png ... image14.png):
+  they must sit in the SAME FOLDER as this index.html
+    Slide 1 ← image.png    · 2 ← image1.png  · 3 ← image2.png  · 4 ← image3.png
+    Slide 5 ← image4.png   · 6 ← image5.png  · 7 ← image7.png  · 8 ← image6.png
+    Slide 9 ← image8.png   · 10 ← image9.png · 11 ← image10.png · 12 ← image11.png
+    Slide 13 ← image12.png · 14 ← image13.png · 15 ← image14.png
+    (slides 7 and 8 use image7/image6 — that is what each file actually shows)
+    Slide 16 has no image yet. To add one, put this right after its
+    <section ...> opening tag:
+      <img class="slide-bg" src="arquivo.jpg" alt="...">
+      <div class="slide-shade"></div>
+  ══════════════════════════════════════════════════════════════════
+-->
+<style>
+  :root{
+    --bg:#04060f;
+    --red:#ff3547;
+    --red-soft:#ff7a68;
+    --ice:#8fd6ff;
+    --gold:#ffc85c;
+    --green:#59e0a0;
+    --ink:#eef2fa;
+    --dim:#9fabc2;
+    --panel:rgba(255,255,255,.045);
+    --line:rgba(255,255,255,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter','Segoe UI',system-ui,sans-serif;
+    overflow:hidden;
+  }
+
+  /* ── space background ─────────────────────────────────────── */
+  .nebula{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(60vw 60vw at 82% 18%, rgba(255,53,71,.14), transparent 60%),
+      radial-gradient(55vw 55vw at 12% 85%, rgba(90,140,255,.12), transparent 60%),
+      radial-gradient(40vw 40vw at 55% 50%, rgba(255,200,92,.05), transparent 65%);
+  }
+  .stars{position:fixed;inset:-50% 0 0 0;pointer-events:none;z-index:0}
+  .stars.l1{background-image:radial-gradient(1px 1px at 25px 35px,#fff,transparent 1.6px),
+      radial-gradient(1px 1px at 120px 90px,rgba(255,255,255,.7),transparent 1.6px),
+      radial-gradient(1.5px 1.5px at 200px 160px,#fff,transparent 2px);
+    background-size:260px 260px;opacity:.55;animation:drift 120s linear infinite}
+  .stars.l2{background-image:radial-gradient(1px 1px at 60px 20px,rgba(255,255,255,.9),transparent 1.5px),
+      radial-gradient(1px 1px at 170px 130px,rgba(143,214,255,.8),transparent 1.5px);
+    background-size:190px 190px;opacity:.4;animation:drift 80s linear infinite reverse}
+  .stars.l3{background-image:radial-gradient(2px 2px at 90px 60px,rgba(255,255,255,.9),transparent 2.5px);
+    background-size:420px 420px;opacity:.5;animation:drift 200s linear infinite}
+  @keyframes drift{from{transform:translateY(0)}to{transform:translateY(50%)}}
+
+  /* ── deck / slides ────────────────────────────────────────── */
+  main{position:fixed;inset:0;z-index:1}
+  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    padding:6vh 4vw 13vh;opacity:0;visibility:hidden;
+    transform:translateY(16px);transition:opacity .45s ease,transform .45s ease,visibility .45s}
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .wrap{width:min(1120px,94vw);max-height:84vh;overflow-y:auto;padding-right:6px;
+    position:relative;z-index:2}
+
+  .who{position:absolute;top:16px;right:22px;font-size:11px;letter-spacing:.18em;z-index:3;
+    text-transform:uppercase;color:var(--dim);border:1px solid var(--line);
+    border-radius:999px;padding:6px 13px;background:rgba(4,6,15,.55);backdrop-filter:blur(6px)}
+  .who i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;font-style:normal}
+  .slide[data-speaker="1"] .who i{background:var(--ice);box-shadow:0 0 8px var(--ice)}
+  .slide[data-speaker="2"] .who i{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+  .slide[data-speaker="3"] .who i{background:var(--red);box-shadow:0 0 8px var(--red)}
+
+  .kicker{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--red-soft);margin-bottom:14px;
+    text-shadow:0 0 18px rgba(255,53,71,.6)}
+  h1{font-family:'Orbitron','Inter',sans-serif;font-weight:900;line-height:1.02}
+  h2{font-family:'Orbitron','Inter',sans-serif;font-weight:700;font-size:clamp(24px,3.4vw,40px);
+    line-height:1.12;margin-bottom:8px}
+  .sub{color:var(--dim);font-size:clamp(14px,1.6vw,18px);line-height:1.5;margin-bottom:22px}
+
+  /* ── components ───────────────────────────────────────────── */
+  .duo{display:grid;grid-template-columns:1.12fr .88fr;gap:22px;align-items:stretch}
+  @media (max-width:820px){.duo{grid-template-columns:1fr}}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-bottom:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 17px}
+  .card h3{font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+  .card ul{list-style:none}
+  .card li{font-size:14.5px;color:var(--ink);line-height:1.5;padding:3px 0 3px 16px;position:relative}
+  .card li::before{content:'▸';position:absolute;left:0;color:var(--red-soft)}
+  .card.red h3{color:var(--red-soft)} .card.ice h3{color:var(--ice)}
+  .card.gold h3{color:var(--gold)} .card.green h3{color:var(--green)}
+
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 18px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:12px 20px;text-align:center}
+  .stat b{display:block;font-family:'Orbitron',sans-serif;font-size:clamp(20px,2.6vw,30px);
+    color:var(--red-soft);text-shadow:0 0 22px rgba(255,53,71,.45)}
+  .stat.ice b{color:var(--ice);text-shadow:0 0 22px rgba(143,214,255,.4)}
+  .stat.gold b{color:var(--gold);text-shadow:0 0 22px rgba(255,200,92,.4)}
+  .stat span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+  .route{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:8px 0 16px}
+  @media (max-width:820px){.route{grid-template-columns:repeat(2,1fr)}}
+  .stop{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 13px 11px;position:relative}
+  .stop::after{content:'›';position:absolute;right:-13px;top:44%;color:var(--red-soft);
+    font-size:22px;font-weight:800;z-index:2}
+  .stop:last-child::after{display:none}
+  .stop .day{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ice)}
+  .stop b{display:block;font-size:15px;margin:5px 0 4px}
+  .stop p{font-size:12.5px;color:var(--dim);line-height:1.45}
+  .stop.hot{border-color:rgba(255,53,71,.5);box-shadow:0 0 24px rgba(255,53,71,.14) inset}
+
+  .imgslot{border:1.5px dashed rgba(255,255,255,.22);border-radius:16px;min-height:230px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+    text-align:center;padding:18px;background:rgba(255,255,255,.02)}
+  .imgslot span{font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+  .imgslot small{font-size:12px;color:var(--dim);line-height:1.5;max-width:230px}
+  .imgslot kbd,.hud kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;
+    padding:1px 6px;font-family:inherit;font-size:11px;color:var(--ink);background:rgba(255,255,255,.06)}
+  .slide-img{width:100%;height:100%;min-height:230px;object-fit:cover;border-radius:16px;
+    border:1px solid var(--line);display:block}
+  .slide-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+  .slide-shade{position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 45%, rgba(4,6,15,.5) 0%, rgba(4,6,15,.94) 80%)}
+
+  .sched{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:9px;margin-bottom:14px}
+  .slot{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 13px}
+  .slot b{display:block;font-family:'Orbitron',sans-serif;font-size:16px;color:var(--gold)}
+  .slot span{font-size:13px;color:var(--ink)}
+
+  .notice{border:1px solid rgba(255,53,71,.45);border-radius:16px;padding:18px 20px;
+    background:linear-gradient(180deg,rgba(255,53,71,.08),rgba(255,53,71,.02));margin-bottom:14px}
+  .notice h3{font-family:'Orbitron',sans-serif;font-size:15px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--red-soft);margin-bottom:10px}
+  .notice li{font-size:15px;line-height:1.55;padding:4px 0 4px 18px;position:relative;list-style:none}
+  .notice li::before{content:'⚠';position:absolute;left:0;font-size:12px;top:7px;color:var(--gold)}
+  .fine{font-size:11.5px;color:var(--dim);line-height:1.6;font-style:italic}
+
+  .center{text-align:center}
+  .chips{display:flex;gap:11px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-size:13px;
+    color:var(--ink);background:rgba(255,255,255,.04)}
+  .chip b{color:var(--red-soft)}
+
+  /* title-slide planet */
+  .planet{width:clamp(180px,22vw,250px);height:clamp(180px,22vw,250px);border-radius:50%;
+    margin:0 auto 30px;position:relative;
+    background:radial-gradient(circle at 32% 30%, #ff8d7a, #e6273d 45%, #55090f 78%, #1c0306);
+    box-shadow:0 0 70px rgba(255,53,71,.55), 0 0 160px rgba(255,53,71,.25), inset -18px -14px 50px rgba(0,0,0,.55)}
+  .planet::after{content:'';position:absolute;inset:-26px;border-radius:50%;
+    border:1px solid rgba(255,122,104,.28);transform:rotateX(72deg)}
+  .moons{position:absolute;width:16px;height:16px;border-radius:50%;background:#cfd8ea;
+    box-shadow:0 0 12px rgba(255,255,255,.7);top:-6px;right:-30px}
+
+  /* ── HUD ──────────────────────────────────────────────────── */
+  .progress{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.07);z-index:40}
+  #bar{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));
+    box-shadow:0 0 12px rgba(255,53,71,.8);transition:width .35s ease}
+  .hud{position:fixed;bottom:16px;left:0;right:0;display:flex;align-items:center;
+    justify-content:center;gap:14px;z-index:40}
+  .hud button{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--ink);
+    background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;
+    padding:9px 18px;cursor:pointer;transition:.2s}
+  .hud button:hover{background:rgba(255,53,71,.18);border-color:var(--red)}
+  #counter{font-size:12px;letter-spacing:.22em;color:var(--dim);min-width:64px;text-align:center}
+  .hint{position:fixed;bottom:20px;left:22px;font-size:11px;color:var(--dim);z-index:40}
+  .promptbtn{position:fixed;bottom:16px;right:22px;z-index:40;font-family:'Inter',sans-serif;
+    font-size:12px;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid var(--line);
+    border-radius:10px;padding:8px 14px;cursor:pointer}
+  .promptbtn:hover{border-color:var(--gold);background:rgba(255,200,92,.14)}
+
+  /* ── AI prompt panel ──────────────────────────────────────── */
+  #promptBox{position:fixed;left:50%;transform:translateX(-50%) translateY(12px);
+    bottom:66px;width:min(780px,93vw);background:#0a0e1bee;border:1px solid var(--line);
+    border-radius:16px;padding:16px 18px;z-index:50;display:none;
+    box-shadow:0 -14px 50px rgba(0,0,0,.6);backdrop-filter:blur(10px)}
+  #promptBox.open{display:block;animation:pop .25s ease}
+  @keyframes pop{from{opacity:0;transform:translateX(-50%) translateY(14px)}
+    to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  #promptBox h4{font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:9px}
+  #promptText{font-size:13px;line-height:1.6;color:var(--ink);margin-bottom:12px}
+  #copyBtn{font-size:12px;color:var(--ink);background:rgba(255,200,92,.14);
+    border:1px solid rgba(255,200,92,.5);border-radius:8px;padding:7px 16px;cursor:pointer}
+  #copyBtn:hover{background:rgba(255,200,92,.28)}
+
+  @media print{
+    body{overflow:visible}
+    main{position:static}
+    .slide{position:relative;opacity:1;visibility:visible;transform:none;
+      height:100vh;page-break-after:always}
+    .hud,.hint,.promptbtn,.progress,#promptBox,.stars,.nebula{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="nebula"></div>
+<div class="stars l1"></div><div class="stars l2"></div><div class="stars l3"></div>
+<div class="progress"><div id="bar"></div></div>
+
+<main id="deck">
+
+  <!-- ═══════════ 1 · TITLE · Presenter 1 ═══════════ -->
+  <section class="slide" data-speaker="1" data-title="Slide 1 — Title"
+    data-prompt="Cinematic wide shot of a colossal luxury space cruise ship with glowing observation domes, approaching a dramatic crimson-red planet with swirling red storms, giant bright-red glowing energy creatures floating in space around the planet, deep starfield and nebula background, epic scale, sci-fi concept art, volumetric lighting, ultra detailed">
+    <img class="slide-bg" src="image.png" alt="The Odyssey approaching the red planet Adrian">
+    <div class="slide-shade"></div>
+    <div class="who"><i></i>Presenter 1 · Itinerary</div>
+    <div class="wrap center">
+      <div class="kicker">Odyssey Interstellar Cruises presents</div>
+      <h1 style="font-size:clamp(40px,7.5vw,86px);letter-spacing:.06em">ADRIAN</h1>
+      <p class="sub" style="margin-top:12px">An Extraordinary Voyage — 48 days from Earth to the most famous planet in the galaxy</p>
+      <div class="chips">
+        <div class="chip"><b>48</b> days on board</div>
+        <div class="chip">Star Wars–style <b>hyperdrive</b> travel</div>
+        <div class="chip"><b>18</b> days on Adrian</div>
+        <div class="chip">Gravity <b>1.4 g</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 2 · THE DESTINATION · Presenter 1 ═══════════ -->
+  <section class="slide" data-speaker="1" data-title="Slide 2 — The Destination"
+    data-prompt="View of the planet Adrian from orbit: a red rocky world with glowing crimson bioluminescent veins across its surface, colossal luminous red astrophage creatures drifting in orbit like jellyfish made of light, a distant star being dimly consumed in the background, awe-inspiring hyper-detailed sci-fi matte painting">
+    <div class="who"><i></i>Presenter 1 · Itinerary</div>
+    <div class="wrap">
+      <div class="kicker">The Destination</div>
+      <h2>ADRIAN — the planet that made history</h2>
+      <p class="sub">Made world-famous by the film <b>“Star Eaters”</b>, now open for the first civilian cruises.</p>
+      <div class="duo">
+        <div>
+          <div class="stats">
+            <div class="stat"><b>1.4 g</b><span>surface gravity</span></div>
+            <div class="stat ice"><b>18</b><span>days on the surface</span></div>
+            <div class="stat gold"><b>★</b><span>home of the astrophages</span></div>
+          </div>
+          <div class="card red">
+            <h3>What you will find</h3>
+            <ul>
+              <li>Red deserts, black volcanic canyons and heavy, silent skies</li>
+              <li>The <b>Astrophages</b> — colossal, bright red beings of pure energy that feed on stars</li>
+              <li>A night sky that burns crimson with their passage</li>
+            </ul>
+          </div>
+        </div>
+        <img class="slide-img" src="image1.png" alt="Planet Adrian from orbit, surrounded by glowing red astrophages">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 3 · THE ROUTE · Presenter 1 ═══════════ -->
+  <section class="slide" data-speaker="1" data-title="Slide 3 — The Route"
+    data-prompt="Stylized holographic star map floating above a spaceship bridge console, a glowing red route line connecting a small blue planet (Earth) through a swirling blue hyperspace tunnel, then to an icy white planet, and finally to a large red planet, Star Wars inspired, dark bridge interior, blue hologram glow, cinematic">
+    <img class="slide-bg" src="image2.png" alt="Holographic route map from Earth to Adrian">
+    <div class="slide-shade"></div>
+    <div class="who"><i></i>Presenter 1 · Itinerary</div>
+    <div class="wrap">
+      <div class="kicker">The Itinerary · Outbound</div>
+      <h2>The Route — Earth to Adrian</h2>
+      <p class="sub">Hyperdrive jumps through hyperspace, one frozen stopover, and the deep-space cruise.</p>
+      <div class="route">
+        <div class="stop"><span class="day">Days 1–2</span><b>🜨 Departure</b><p>Leave Earth orbit · adaptation on board the <i>Odyssey</i></p></div>
+        <div class="stop"><span class="day">Days 3–6</span><b>⚡ First jump</b><p>Hyperdrive leg through hyperspace at lightspeed</p></div>
+        <div class="stop"><span class="day">Days 7–8</span><b>❄ Nivara</b><p>Stopover at the frozen gateway world · cold excursions</p></div>
+        <div class="stop"><span class="day">Days 9–17</span><b>🌌 Deep space</b><p>Final cruise to the Adrian system · observatory nights</p></div>
+        <div class="stop hot"><span class="day">Day 18</span><b>🪐 Arrival</b><p>Landing clearance · first walk on Adrian</p></div>
+      </div>
+      <div class="grid">
+        <div class="card ice"><h3>On the way</h3><ul><li>Two moons and a crimson nebula visible from every deck</li></ul></div>
+        <div class="card gold"><h3>Nivara stopover</h3><ul><li>Ice fields, adjusted-gravity training halls, thermal suits provided</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 4 · STAY & RETURN · Presenter 1 ═══════════ -->
+  <section class="slide" data-speaker="1" data-title="Slide 4 — Stay & Return"
+    data-prompt="Luxury spaceship interior observation lounge, passengers relaxing with drinks while watching a hyperspace jump through a giant panoramic window, stars stretched into streaks of blue light, warm ambient golden lighting, cozy futuristic cruise atmosphere, cinematic interior concept art">
+    <div class="who"><i></i>Presenter 1 · Itinerary</div>
+    <div class="wrap">
+      <div class="kicker">The Itinerary · Stay &amp; Return</div>
+      <h2>18 days on Adrian · 12 days home</h2>
+      <div class="duo" style="margin-top:14px">
+        <div>
+          <div class="card red" style="margin-bottom:13px">
+            <h3>Days 1–18 · on Adrian</h3>
+            <ul>
+              <li>Short guided walks at first — the gravity demands respect</li>
+              <li>Longer excursions unlock from Day 8</li>
+              <li>Astrophage watching, canyons, dunes and the red night sky</li>
+              <li>Day 18: rest, medical check and boarding</li>
+            </ul>
+          </div>
+          <div class="card ice">
+            <h3>The return cruise</h3>
+            <ul>
+              <li>12 days of reconditioning before Earth gravity</li>
+              <li>Observatory, cinema dome and farewell gala</li>
+            </ul>
+          </div>
+        </div>
+        <img class="slide-img" src="image3.png" alt="Passengers watching a hyperspace jump from the Odyssey lounge">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 5 · WHY TRAIN · Presenter 2 ═══════════ -->
+  <section class="slide" data-speaker="2" data-title="Slide 5 — Why You Must Train"
+    data-prompt="Split concept art: on the left an astronaut struggling to walk on a heavy-gravity red alien surface, bent under invisible weight, dust exploding at each step; on the right a glowing holographic diagram of human legs and heart highlighted in red, futuristic medical HUD graphics, dark spaceship background, cinematic">
+    <div class="who"><i></i>Presenter 2 · Conditioning</div>
+    <div class="wrap">
+      <div class="kicker">The Interstellar Conditioning Program</div>
+      <h2>Why you must train — the 1.4 g problem</h2>
+      <p class="sub">Adrian’s gravity is <b>40% stronger</b> than Earth’s. The voyage begins in your body, on Day 1.</p>
+      <div class="duo">
+        <div>
+          <div class="stats">
+            <div class="stat"><b>+40%</b><span>body weight felt</span></div>
+            <div class="stat gold"><b>Day 1</b><span>program starts</span></div>
+            <div class="stat ice"><b>100%</b><span>mandatory for surface guests</span></div>
+          </div>
+          <div class="card">
+            <h3>What 1.4 g does to you</h3>
+            <ul>
+              <li>Every step, stair and backpack weighs almost half again more</li>
+              <li>Legs, heart and balance work overtime — unprepared visitors are exhausted in minutes</li>
+              <li>The program also keeps muscles strong through weeks in space, and runs on the return trip too</li>
+            </ul>
+          </div>
+        </div>
+        <img class="slide-img" src="image4.png" alt="An astronaut struggling under Adrian's 1.4 g gravity">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 6 · PHASE 1 · Presenter 2 ═══════════ -->
+  <section class="slide" data-speaker="2" data-title="Slide 6 — Program Phase 1 (Days 1–8)"
+    data-prompt="Futuristic cruise ship gym with adjustable gravity plates glowing in the floor, passengers doing light stretching and cycling on sleek exercise bikes, huge windows showing streaking hyperspace stars outside, soft blue and red ambient lighting, clean elegant sci-fi interior">
+    <div class="who"><i></i>Presenter 2 · Conditioning</div>
+    <div class="wrap">
+      <div class="kicker">Conditioning · Phase 1</div>
+      <h2>Leaving Earth — Days 1 to 8</h2>
+      <p class="sub">The intensity rises gradually. The goal of Phase 1 is simply to build the routine.</p>
+      <div class="grid">
+        <div class="card green">
+          <h3>Days 1–2 · Adaptation</h3>
+          <ul>
+            <li>Morning: 20 min walking, stretching, mobility</li>
+            <li>Afternoon: 15–20 min on the exercise bike</li>
+            <li>Light work for legs and back</li>
+          </ul>
+        </div>
+        <div class="card ice">
+          <h3>Days 3–6 · First hyperdrive leg</h3>
+          <ul>
+            <li><b>45 min/day:</b> treadmill 15 · bike 15 · resistance 10 · stretching 5</li>
+            <li>Gym built for interstellar travel</li>
+          </ul>
+        </div>
+        <div class="card gold">
+          <h3>Days 7–8 · Nivara</h3>
+          <ul>
+            <li>Resistance-equipment training</li>
+            <li>Artificial gravity raised step by step on board</li>
+            <li>Cold-weather excursions in thermal suits</li>
+          </ul>
+        </div>
+      </div>
+      <img class="slide-img" src="image5.png" alt="Training in the Odyssey gym during the hyperdrive leg" style="min-height:150px;height:150px">
+    </div>
+  </section>
+
+  <!-- ═══════════ 7 · PHASE 2 · Presenter 2 ═══════════ -->
+  <section class="slide" data-speaker="2" data-title="Slide 7 — Program Phase 2 (Days 9–18)"
+    data-prompt="An astronaut candidate running on a treadmill inside a futuristic medical bay, holographic displays showing heart rate and vital signs in red and blue light, a robotic medical scanner overhead, high-tech starship interior, cinematic lighting, ultra detailed">
+    <div class="who"><i></i>Presenter 2 · Conditioning</div>
+    <div class="wrap">
+      <div class="kicker">Conditioning · Phase 2</div>
+      <h2>The final approach — Days 9 to 18</h2>
+      <p class="sub">The most important phase of the outbound voyage: <b>60 minutes a day</b>, legs first.</p>
+      <div class="duo">
+        <div>
+          <div class="stats">
+            <div class="stat"><b>20′</b><span>legs · priority</span></div>
+            <div class="stat ice"><b>15′</b><span>cardio</span></div>
+            <div class="stat gold"><b>15′</b><span>core &amp; back</span></div>
+            <div class="stat"><b>10′</b><span>mobility</span></div>
+          </div>
+          <div class="card red">
+            <h3>Days 17–18 · Medical clearance</h3>
+            <ul>
+              <li>Tests: endurance, heart rate under effort, balance, walking capacity, gravity-load adaptation</li>
+              <li>Approved → authorization for your <b>first walk on Adrian</b></li>
+            </ul>
+          </div>
+        </div>
+        <img class="slide-img" src="image7.png" alt="Medical evaluation on a treadmill before landing on Adrian">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 8 · TRAINING ON ADRIAN · Presenter 2 ═══════════ -->
+  <section class="slide" data-speaker="2" data-title="Slide 8 — Training on Adrian"
+    data-prompt="A line of tourists in sleek white spacesuits walking across a vast red desert plain on an alien planet, heavy gravity dust kicked up at each step, two moons in a dusty red sky, giant glowing red creatures on the distant horizon, epic sci-fi landscape, cinematic wide shot">
+    <div class="who"><i></i>Presenter 2 · Conditioning</div>
+    <div class="wrap">
+      <div class="kicker">Conditioning · On the surface</div>
+      <h2>18 days at 1.4 g — walk before you run</h2>
+      <p class="sub">On Adrian, simply walking is already a workout. No heavy training on arrival — the planet does it for you.</p>
+      <div class="grid">
+        <div class="card green"><h3>Days 1–3</h3><ul><li>20–30 min walking</li><li>then 30–40 · then 40–50 min</li></ul></div>
+        <div class="card ice"><h3>Days 4–7</h3><ul><li>Up to 60 min of moderate activity</li></ul></div>
+        <div class="card gold"><h3>Days 8–14</h3><ul><li>Long excursions unlocked 🎉</li></ul></div>
+        <div class="card red"><h3>Days 15–18</h3><ul><li>Normal activities + prep for lighter gravity</li><li>Day 18: rest &amp; boarding</li></ul></div>
+      </div>
+      <img class="slide-img" src="image6.png" alt="Tourists walking across Adrian's red desert in spacesuits" style="min-height:150px;height:150px">
+    </div>
+  </section>
+
+  <!-- ═══════════ 9 · RETURN PROGRAM · Presenter 2 ═══════════ -->
+  <section class="slide" data-speaker="2" data-title="Slide 9 — The Return Program"
+    data-prompt="Passengers doing yoga and light stretching inside a spaceship gym whose floor glows in a gradient from blue to red, relaxed atmosphere, large window showing planet Earth growing larger in the distance, warm golden light, serene sci-fi interior">
+    <div class="who"><i></i>Presenter 2 · Conditioning</div>
+    <div class="wrap">
+      <div class="kicker">Conditioning · The Voyage Home</div>
+      <h2>The return — back to lightness</h2>
+      <p class="sub">After 18 days at 1.4 g, the ship suddenly feels weightless. Guests describe it as <b>“walking on feathers”</b> — so the routine goes back under control.</p>
+      <div class="grid">
+        <div class="card green"><h3>Return · Days 1–4</h3><ul><li>Light exercise, stretching, bike, short walks</li></ul></div>
+        <div class="card ice"><h3>Return · Days 5–12</h3><ul><li><b>45–60 min/day:</b> cardio 20 · resistance 20 · mobility 10</li><li>Adjustable-gravity training sessions</li></ul></div>
+        <div class="card gold"><h3>Final days</h3><ul><li>Breathing exercises · medical evaluation</li><li>Rest — ready for Earth</li></ul></div>
+      </div>
+      <img class="slide-img" src="image8.png" alt="Stretching session in the ship gym while Earth grows closer" style="min-height:150px;height:150px">
+    </div>
+  </section>
+
+  <!-- ═══════════ 10 · THE GYM · Presenter 2 ═══════════ -->
+  <section class="slide" data-speaker="2" data-title="Slide 10 — The Odyssey Gym"
+    data-prompt="Cutaway isometric illustration of a three-level spaceship gym: upper level bathed in green light with people doing recreational exercise under normal gravity, middle level in yellow light with weight training, lower level in intense red light with astronauts doing heavy-load training, futuristic architectural visualization, clean sci-fi style">
+    <div class="who"><i></i>Presenter 2 · Conditioning</div>
+    <div class="wrap">
+      <div class="kicker">Aboard the Odyssey</div>
+      <h2>One gym, three gravity zones</h2>
+      <p class="sub">Artificial gravity is adjustable — we train for exactly the world we are flying to.</p>
+      <div class="grid">
+        <div class="card green"><h3>🟢 Zone 1 · Normal</h3><ul><li>Recreational exercise, yoga, stretching</li></ul></div>
+        <div class="card gold"><h3>🟡 Zone 2 · Increased</h3><ul><li>Daily conditioning for every guest</li></ul></div>
+        <div class="card red"><h3>🔴 Zone 3 · High load</h3><ul><li>Heavy training for Adrian excursion guests</li></ul></div>
+      </div>
+      <img class="slide-img" src="image9.png" alt="Cutaway of the Odyssey gym: three gravity zones" style="min-height:180px;height:180px">
+    </div>
+  </section>
+
+  <!-- ═══════════ 11 · ASTROPHAGES · Presenter 3 ═══════════ -->
+  <section class="slide" data-speaker="3" data-title="Slide 11 — Adrian & the Astrophages"
+    data-prompt="Close-up of magnificent bright red astrophage creatures: translucent jellyfish-like beings of pure glowing crimson energy with long trailing tendrils of light, drifting in space near a red planet, tiny stars reflected inside their bodies, bioluminescent, breathtaking sci-fi creature design, dark space background">
+    <div class="who"><i></i>Presenter 3 · The Experience</div>
+    <div class="wrap">
+      <div class="kicker">The Experience</div>
+      <h2>The Astrophages — stars given life</h2>
+      <p class="sub">The film <b>“Star Eaters”</b> turned Adrian into legend. The creatures are real — and they are waiting.</p>
+      <div class="duo">
+        <div>
+          <div class="card red" style="margin-bottom:13px">
+            <h3>Meet the astrophages</h3>
+            <ul>
+              <li>Colossal beings of pure, bright red energy</li>
+              <li>They drift between the stars, feeding on them — hence the film’s name</li>
+              <li>On Adrian, the night sky burns crimson as the herds pass</li>
+            </ul>
+          </div>
+          <div class="card gold"><h3>On this cruise</h3><ul><li>You don’t watch them on a screen. You float among them.</li></ul></div>
+        </div>
+        <img class="slide-img" src="image10.png" alt="Bright red astrophages drifting near Adrian">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 12 · SURFACE EXCURSIONS · Presenter 3 ═══════════ -->
+  <section class="slide" data-speaker="3" data-title="Slide 12 — Surface Excursions"
+    data-prompt="Tourists in white and orange spacesuits standing on a cliff of black volcanic rock on a red alien planet, watching a colossal herd of glowing red astrophage creatures rise from a canyon into the dark sky like thousands of living lanterns, dramatic scale, cinematic wide shot, epic sci-fi">
+    <div class="who"><i></i>Presenter 3 · The Experience</div>
+    <div class="wrap">
+      <div class="kicker">The Experience · Surface</div>
+      <h2>Excursions — unlocked on Day 8</h2>
+      <p class="sub">One week of training, and the planet opens its doors.</p>
+      <div class="duo">
+        <div>
+          <div class="card red" style="margin-bottom:13px">
+            <h3>What you will do</h3>
+            <ul>
+              <li>Walk canyons of black volcanic rock under a red sky</li>
+              <li>Cross the singeing dunes of the Crimson Sea</li>
+              <li>Watch astrophage herds rise from the valleys like living lanterns</li>
+            </ul>
+          </div>
+          <div class="card ice"><h3>Always included</h3><ul><li>Expert guides · premium suits · medical tracking</li></ul></div>
+        </div>
+        <img class="slide-img" src="image11.png" alt="Excursion guests watching an astrophage herd rise from a canyon">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 13 · ZERO-G ALTERNATIVE · Presenter 3 ═══════════ -->
+  <section class="slide" data-speaker="3" data-title="Slide 13 — The Zero-G Alternative"
+    data-prompt="A person in an elegant spacesuit floating weightless on an observation platform outside a spaceship, surrounded by dozens of giant glowing red astrophage creatures drifting close like curious whales made of light, their crimson glow reflecting on the helmet visor, magical, serene, cinematic sci-fi art">
+    <div class="who"><i></i>Presenter 3 · The Experience</div>
+    <div class="wrap">
+      <div class="kicker">The Experience · Alternative</div>
+      <h2>Not a fan of training? The Astrophage Encounter</h2>
+      <p class="sub">Leave the ship in a premium suit and float among the bright red astrophages — in <b>zero gravity</b>.</p>
+      <div class="duo">
+        <div>
+          <div class="card gold" style="margin-bottom:13px">
+            <h3>Why it needs so little preparation</h3>
+            <ul>
+              <li>In zero gravity your body weight doesn’t matter — no 1.4 g strain</li>
+              <li>Only a short suit &amp; safety briefing is required</li>
+              <li>Open to every guest, at every age, on any day of the stay</li>
+            </ul>
+          </div>
+          <div class="card red"><h3>The price of comfort</h3><ul><li>No surface walks, no canyons — the astrophages come to <i>you</i></li></ul></div>
+        </div>
+        <img class="slide-img" src="image12.png" alt="Zero-gravity Astrophage Encounter outside the Odyssey">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 14 · A DAY ABOARD · Presenter 3 ═══════════ -->
+  <section class="slide" data-speaker="3" data-title="Slide 14 — A Day Aboard"
+    data-prompt="Luxurious starship promenade deck in the evening: passengers dining at restaurants with panoramic space views, a glowing cinema dome, an observation deck with telescopes, a red nebula visible through the glass ceiling, warm golden interior lights contrasting with deep space blue, detailed sci-fi illustration">
+    <div class="who"><i></i>Presenter 3 · The Experience</div>
+    <div class="wrap">
+      <div class="kicker">Life on Board</div>
+      <h2>A day aboard the Odyssey</h2>
+      <div class="sched" style="margin-top:16px">
+        <div class="slot"><b>07:00</b><span>☀️ Breakfast</span></div>
+        <div class="slot"><b>08:00</b><span>🏋️ Conditioning (mandatory)</span></div>
+        <div class="slot"><b>09:00</b><span>🚿 Shower / rest</span></div>
+        <div class="slot"><b>10:00</b><span>🔬 Lectures &amp; activities</span></div>
+        <div class="slot"><b>12:30</b><span>🍽️ Lunch</span></div>
+        <div class="slot"><b>14:00</b><span>🎭 Entertainment</span></div>
+        <div class="slot"><b>16:00</b><span>🌌 Observatory</span></div>
+        <div class="slot"><b>19:00</b><span>🍽️ Dinner</span></div>
+        <div class="slot"><b>21:00</b><span>🎬 Cinema / leisure</span></div>
+        <div class="slot"><b>23:00</b><span>😴 Sleep</span></div>
+      </div>
+      <img class="slide-img" src="image13.png" alt="Evening on the Odyssey promenade deck" style="min-height:150px;height:150px">
+    </div>
+  </section>
+
+  <!-- ═══════════ 15 · MANDATORY NOTICE · Presenter 3 ═══════════ -->
+  <section class="slide" data-speaker="3" data-title="Slide 15 — Mandatory Notice"
+    data-prompt="An elegant formal contract document on a dark metal table, illuminated by red glow from a nearby window showing space and the red planet Adrian, a luxury pen resting on the fine print, corporate sci-fi mood, shallow depth of field, cinematic">
+    <div class="who"><i></i>Presenter 3 · The Experience</div>
+    <div class="wrap">
+      <div class="kicker">Before You Book</div>
+      <h2>Mandatory notice</h2>
+      <div class="notice" style="margin-top:14px">
+        <h3>⚠ Terms of carriage — Adrian voyage</h3>
+        <ul>
+          <li>By booking, the guest <b>acknowledges that the Interstellar Conditioning Program is mandatory</b> for all surface excursions.</li>
+          <li>Guests who choose not to train remain on board and enjoy the zero-g Astrophage Encounter deck.</li>
+          <li><b>Odyssey Interstellar Cruises is not responsible for any deaths.</b></li>
+        </ul>
+      </div>
+      <p class="fine">Odyssey Interstellar Cruises Ltd. — By confirming this reservation the passenger declares having read, understood and accepted all physical preparation requirements established in the Interstellar Conditioning Program, including its medical evaluation stages. The company disclaims any and all liability for accidents, injuries, gravitational exhaustion or death occurring during the voyage, on the surface of Adrian, or in open space. Space is beautiful. Space is also space.</p>
+      <img class="slide-img" src="image14.png" alt="The Adrian voyage travel contract" style="min-height:100px;height:100px;margin-top:4px">
+    </div>
+  </section>
+
+  <!-- ═══════════ 16 · FAREWELL · All presenters ═══════════ -->
+  <section class="slide" data-speaker="3" data-title="Slide 16 — Farewell"
+    data-prompt="The luxury cruise ship Odyssey departing from orbit around the red planet Adrian, bright red astrophage creatures waving like glowing ribbons in its wake, a blue hyperspace jump beginning to form ahead of the ship, epic farewell scene, cinematic sci-fi art, ultra detailed">
+    <div class="who"><i></i>All presenters</div>
+    <div class="wrap center">
+      <div class="kicker">Odyssey Interstellar Cruises</div>
+      <h1 style="font-size:clamp(32px,5.5vw,64px);letter-spacing:.04em">ADRIAN IS WAITING.</h1>
+      <p class="sub" style="margin-top:14px;font-size:clamp(16px,2vw,22px)"><b>Train for it.</b></p>
+      <div class="chips">
+        <div class="chip">Limited cabins · <b>Infinite sky</b></div>
+        <div class="chip">Departures: Earth Orbital Port 7</div>
+        <div class="chip">Book at <b>odyssey.adrian</b></div>
+      </div>
+      <p class="sub" style="margin-top:30px">Thank you! Any questions?</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- HUD -->
+<div class="hint">← → navigate · <kbd>F</kbd> fullscreen · <kbd>P</kbd> image prompt</div>
+<div class="hud">
+  <button id="prev" title="Previous">‹ PREV</button>
+  <div id="counter">1 / 16</div>
+  <button id="next" title="Next">NEXT ›</button>
+</div>
+<button class="promptbtn" id="promptToggle">🖼 AI image prompt</button>
+
+<!-- AI prompt panel -->
+<div id="promptBox">
+  <h4 id="promptTitle">AI image prompt</h4>
+  <div id="promptText"></div>
+  <button id="copyBtn">📋 Copy prompt</button>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const bar = document.getElementById('bar');
+  const counter = document.getElementById('counter');
+  const box = document.getElementById('promptBox');
+  const pTitle = document.getElementById('promptTitle');
+  const pText = document.getElementById('promptText');
+  let i = 0;
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s,k)=>s.classList.toggle('active', k===i));
+    counter.textContent = (i+1) + ' / ' + slides.length;
+    bar.style.width = ((i+1) / slides.length * 100) + '%';
+    if (box.classList.contains('open')) renderPrompt();
+  }
+  function renderPrompt(){
+    const s = slides[i];
+    pTitle.textContent = (s.dataset.title || 'Slide') + ' — AI image prompt';
+    pText.textContent = s.dataset.prompt || '';
+  }
+  const next = ()=>show(i+1), prev = ()=>show(i-1);
+  document.getElementById('next').onclick = next;
+  document.getElementById('prev').onclick = prev;
+
+  document.getElementById('promptToggle').onclick = ()=>{
+    box.classList.toggle('open'); renderPrompt();
+  };
+  document.getElementById('copyBtn').onclick = async (e)=>{
+    const text = slides[i].dataset.prompt || '';
+    try{ await navigator.clipboard.writeText(text); }
+    catch(err){
+      const t = document.createElement('textarea');
+      t.value = text; document.body.appendChild(t);
+      t.select(); document.execCommand('copy'); t.remove();
+    }
+    e.target.textContent = '✅ Copied!';
+    setTimeout(()=>{ e.target.textContent = '📋 Copy prompt'; }, 1400);
+  };
+
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'p' || e.key === 'P') { box.classList.toggle('open'); renderPrompt(); }
+    else if (e.key === 'c' || e.key === 'C') document.getElementById('copyBtn').click();
+    else if (e.key === 'f' || e.key === 'F') {
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    }
+  });
+
+  show(0);
+</script>
+</body>
+</html>
